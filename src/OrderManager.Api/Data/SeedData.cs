@@ -38,5 +38,14 @@ public static class SeedData
         }).ToArray();
         context.InventoryItems.AddRange(inventoryItems);
         context.SaveChanges();
+
+        var projects = new[]
+        {
+            new Project { Name = "Website Redesign", Description = "Complete redesign of corporate website", CustomerId = customers[0].Id, StartDate = new DateTime(2024, 1, 15), Status = "Active" },
+            new Project { Name = "ERP Integration", Description = "Integrate with enterprise resource planning system", CustomerId = customers[1].Id, StartDate = new DateTime(2024, 3, 1), Status = "Active" },
+            new Project { Name = "Mobile App", Description = "Develop mobile companion application", CustomerId = customers[2].Id, StartDate = new DateTime(2023, 6, 1), Status = "Completed" },
+        };
+        context.Projects.AddRange(projects);
+        context.SaveChanges();
     }
 }

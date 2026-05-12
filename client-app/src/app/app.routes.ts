@@ -6,4 +6,5 @@ export const routes: Routes = [
   { path: 'products', loadComponent: () => import('./modules/products/product-list.component').then(m => m.ProductListComponent) },
   { path: 'customers', loadComponent: () => import('./modules/customers/customer-list.component').then(m => m.CustomerListComponent) },
   { path: 'inventory', loadComponent: () => import('./modules/inventory/inventory-list.component').then(m => m.InventoryListComponent) },
+  { path: 'projects', loadComponent: () => import('./modules/projects/project-list.component').then(m => m.ProjectListComponent) },
 ];
