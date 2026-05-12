@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<InventoryItem> InventoryItems => Set<InventoryItem>();
+    public DbSet<Project> Projects => Set<Project>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -51,6 +52,14 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.HasOne(e => e.Product).WithOne(p => p.Inventory).HasForeignKey<InventoryItem>(e => e.ProductId);
+        });
+
+        modelBuilder.Entity<Project>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Status).IsRequired().HasMaxLength(50);
+            entity.HasOne(e => e.Customer).WithMany().HasForeignKey(e => e.CustomerId);
         });
     }
 }
