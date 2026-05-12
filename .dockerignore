@@ -1,0 +1,13 @@
+.git
+.github
+.gitignore
+.dockerignore
+*.md
+LICENSE
+node_modules
+dist
+.angular
+bin
+obj
+*.db
+tests
