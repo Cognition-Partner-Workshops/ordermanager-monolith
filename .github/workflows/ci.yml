@@ -1,0 +1,73 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Backend (.NET)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore OrderManager.sln
+
+      - name: Build
+        run: dotnet build OrderManager.sln --no-restore
+
+      - name: Run tests with coverage
+        run: dotnet test tests/OrderManager.Api.Tests/OrderManager.Api.Tests.csproj --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage
+
+      - name: Upload backend coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: coverage/**/coverage.cobertura.xml
+
+  frontend:
+    name: Frontend (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    defaults:
+      run:
+        working-directory: client-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint (ESLint)
+        run: npx ng lint
+
+      - name: Run unit tests with coverage
+        run: npx ng test --watch=false --browsers=ChromeHeadless --code-coverage
+
+      - name: Build production bundle
+        run: npx ng build
+
+      - name: Security audit
+        run: npm audit --audit-level=critical
+        continue-on-error: true
+
+      - name: Upload frontend coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage-node-${{ matrix.node-version }}
+          path: client-app/coverage/
