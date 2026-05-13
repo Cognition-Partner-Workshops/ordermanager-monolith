@@ -1,6 +1,8 @@
 package com.ordermanager.api.controller;
 
 import com.ordermanager.api.service.InventoryService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +29,7 @@ public class InventoryController {
     }
 
     @PostMapping("/product/{productId}/restock")
-    public ResponseEntity<?> restock(@PathVariable int productId, @RequestBody RestockRequest request) {
+    public ResponseEntity<?> restock(@PathVariable int productId, @Valid @RequestBody RestockRequest request) {
         return ResponseEntity.ok(inventoryService.restock(productId, request.quantity()));
     }
 
@@ -36,5 +38,6 @@ public class InventoryController {
         return ResponseEntity.ok(inventoryService.getLowStockItems());
     }
 
-    public record RestockRequest(int quantity) {}
+    public record RestockRequest(
+            @Min(value = 1, message = "Restock quantity must be at least 1") int quantity) {}
 }

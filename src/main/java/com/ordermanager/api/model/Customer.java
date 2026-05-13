@@ -2,6 +2,9 @@ package com.ordermanager.api.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +17,14 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "Name is required")
+    @Size(max = 200, message = "Name must be at most 200 characters")
     @Column(nullable = false, length = 200)
     private String name = "";
 
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email must be valid")
+    @Size(max = 200, message = "Email must be at most 200 characters")
     @Column(nullable = false, length = 200, unique = true)
     private String email = "";
 

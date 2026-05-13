@@ -2,6 +2,10 @@ package com.ordermanager.api.controller;
 
 import com.ordermanager.api.service.OrderService;
 import com.ordermanager.api.service.OrderService.OrderItemRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
@@ -30,7 +34,7 @@ public class OrdersController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody CreateOrderRequest request) {
+    public ResponseEntity<?> create(@Valid @RequestBody CreateOrderRequest request) {
         List<OrderItemRequest> items = request.items().stream()
                 .map(i -> new OrderItemRequest(i.productId(), i.quantity()))
                 .toList();
@@ -39,11 +43,16 @@ public class OrdersController {
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<?> updateStatus(@PathVariable int id, @RequestBody UpdateStatusRequest request) {
+    public ResponseEntity<?> updateStatus(@PathVariable int id, @Valid @RequestBody UpdateStatusRequest request) {
         return ResponseEntity.ok(orderService.updateOrderStatus(id, request.status()));
     }
 
-    public record CreateOrderRequest(int customerId, List<OrderItemDto> items) {}
-    public record OrderItemDto(int productId, int quantity) {}
-    public record UpdateStatusRequest(String status) {}
+    public record CreateOrderRequest(
+            @Min(value = 1, message = "Customer ID must be positive") int customerId,
+            @NotEmpty(message = "Order must have at least one item") List<@Valid OrderItemDto> items) {}
+    public record OrderItemDto(
+            @Min(value = 1, message = "Product ID must be positive") int productId,
+            @Min(value = 1, message = "Quantity must be at least 1") int quantity) {}
+    public record UpdateStatusRequest(
+            @NotBlank(message = "Status is required") String status) {}
 }

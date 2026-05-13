@@ -2,6 +2,7 @@ package com.ordermanager.api.controller;
 
 import com.ordermanager.api.model.Customer;
 import com.ordermanager.api.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
@@ -29,7 +30,7 @@ public class CustomersController {
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody Customer customer) {
+    public ResponseEntity<?> create(@Valid @RequestBody Customer customer) {
         Customer created = customerService.createCustomer(customer);
         return ResponseEntity.created(URI.create("/api/customers/" + created.getId())).body(created);
     }

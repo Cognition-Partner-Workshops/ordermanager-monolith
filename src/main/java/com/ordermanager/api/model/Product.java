@@ -3,6 +3,10 @@ package com.ordermanager.api.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -16,15 +20,21 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotBlank(message = "Product name is required")
+    @Size(max = 200, message = "Name must be at most 200 characters")
     @Column(nullable = false, length = 200)
     private String name = "";
 
     private String description = "";
     private String category = "";
 
+    @NotNull(message = "Price is required")
+    @DecimalMin(value = "0.00", message = "Price must be non-negative")
     @Column(precision = 18, scale = 2)
     private BigDecimal price = BigDecimal.ZERO;
 
+    @NotBlank(message = "SKU is required")
+    @Size(max = 50, message = "SKU must be at most 50 characters")
     @Column(nullable = false, length = 50, unique = true)
     private String sku = "";
 
