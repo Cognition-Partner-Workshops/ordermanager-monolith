@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
       <thead><tr><th>SKU</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr></thead>
       <tbody>
         <tr *ngFor="let p of products">
-          <td>{{p.sku}}</td><td>{{p.name}}</td><td>{{p.category}}</td><td>{{p.price | currency}}</td><td>{{p.inventory?.quantityOnHand ?? 'N/A'}}</td>
+          <td>{{p.sku}}</td><td>{{p.name}}</td><td>{{p.category}}</td><td>{{p.price | currency}}</td><td>N/A</td>
         </tr>
       </tbody>
     </table>
