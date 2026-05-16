@@ -15,12 +15,12 @@ public class ProductService
 
     public async Task<List<Product>> GetAllProductsAsync()
     {
-        return await _context.Products.Include(p => p.Inventory).ToListAsync();
+        return await _context.Products.ToListAsync();
     }
 
     public async Task<Product?> GetProductByIdAsync(int id)
     {
-        return await _context.Products.Include(p => p.Inventory).FirstOrDefaultAsync(p => p.Id == id);
+        return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<Product> CreateProductAsync(Product product)
@@ -32,6 +32,6 @@ public class ProductService
 
     public async Task<List<Product>> GetProductsByCategoryAsync(string category)
     {
-        return await _context.Products.Where(p => p.Category == category).Include(p => p.Inventory).ToListAsync();
+        return await _context.Products.Where(p => p.Category == category).ToListAsync();
     }
 }
