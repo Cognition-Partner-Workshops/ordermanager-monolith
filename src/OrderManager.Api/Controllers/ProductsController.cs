@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using OrderManager.Api.Interfaces;
 using OrderManager.Api.Models;
-using OrderManager.Api.Services;
 
 namespace OrderManager.Api.Controllers;
 
@@ -8,9 +8,9 @@ namespace OrderManager.Api.Controllers;
 [Route("api/[controller]")]
 public class ProductsController : ControllerBase
 {
-    private readonly ProductService _productService;
+    private readonly IProductService _productService;
 
-    public ProductsController(ProductService productService)
+    public ProductsController(IProductService productService)
     {
         _productService = productService;
     }

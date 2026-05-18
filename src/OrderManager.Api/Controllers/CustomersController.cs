@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using OrderManager.Api.Interfaces;
 using OrderManager.Api.Models;
-using OrderManager.Api.Services;
 
 namespace OrderManager.Api.Controllers;
 
@@ -8,9 +8,9 @@ namespace OrderManager.Api.Controllers;
 [Route("api/[controller]")]
 public class CustomersController : ControllerBase
 {
-    private readonly CustomerService _customerService;
+    private readonly ICustomerService _customerService;
 
-    public CustomersController(CustomerService customerService)
+    public CustomersController(ICustomerService customerService)
     {
         _customerService = customerService;
     }

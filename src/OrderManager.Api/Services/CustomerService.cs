@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using OrderManager.Api.Data;
+using OrderManager.Api.Interfaces;
 using OrderManager.Api.Models;
 
 namespace OrderManager.Api.Services;
 
-public class CustomerService
+public class CustomerService : ICustomerService
 {
     private readonly AppDbContext _context;
 
