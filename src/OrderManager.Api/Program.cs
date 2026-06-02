@@ -10,7 +10,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CustomerService>();
-builder.Services.AddScoped<InventoryService>();
+
+// Register HTTP client for the inventory microservice (replaces in-process InventoryService)
+builder.Services.AddHttpClient<InventoryServiceClient>(client =>
+{
+    var baseUrl = builder.Configuration["InventoryService:BaseUrl"] ?? "http://localhost:5100";
+    client.BaseAddress = new Uri(baseUrl);
+});
 
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
