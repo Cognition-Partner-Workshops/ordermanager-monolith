@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OrderManager.Api.Data;
+using OrderManager.Api.HttpClients;
 using OrderManager.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,16 +8,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=ordermanager.db"));
 
+var inventoryServiceUrl = builder.Configuration["InventoryServiceUrl"] ?? "http://localhost:5001";
+builder.Services.AddHttpClient<InventoryHttpClient>(client =>
+{
+    client.BaseAddress = new Uri(inventoryServiceUrl);
+});
+
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CustomerService>();
-builder.Services.AddScoped<InventoryService>();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHealthChecks();
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
@@ -33,5 +40,6 @@ app.UseSwaggerUI();
 app.UseCors();
 app.UseStaticFiles();
 app.MapControllers();
+app.MapHealthChecks("/health");
 app.MapFallbackToFile("index.html");
 app.Run();

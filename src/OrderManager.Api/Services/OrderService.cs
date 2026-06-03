@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using OrderManager.Api.Data;
+using OrderManager.Api.HttpClients;
 using OrderManager.Api.Models;
 
 namespace OrderManager.Api.Services;
@@ -7,10 +9,14 @@ namespace OrderManager.Api.Services;
 public class OrderService
 {
     private readonly AppDbContext _context;
+    private readonly InventoryHttpClient _inventoryClient;
+    private readonly ILogger<OrderService> _logger;
 
-    public OrderService(AppDbContext context)
+    public OrderService(AppDbContext context, InventoryHttpClient inventoryClient, ILogger<OrderService> logger)
     {
         _context = context;
+        _inventoryClient = inventoryClient;
+        _logger = logger;
     }
 
     public async Task<List<Order>> GetAllOrdersAsync()
@@ -41,18 +47,11 @@ public class OrderService
             ShippingAddress = $"{customer.Address}, {customer.City}, {customer.State} {customer.ZipCode}"
         };
 
+        // Build order items first (validate products exist)
         foreach (var (productId, quantity) in items)
         {
             var product = await _context.Products.FindAsync(productId)
                 ?? throw new ArgumentException($"Product {productId} not found");
-
-            var inventory = await _context.InventoryItems.FirstOrDefaultAsync(i => i.ProductId == productId)
-                ?? throw new InvalidOperationException($"No inventory record for product {productId}");
-
-            if (inventory.QuantityOnHand < quantity)
-                throw new InvalidOperationException($"Insufficient stock for {product.Name}. Available: {inventory.QuantityOnHand}");
-
-            inventory.QuantityOnHand -= quantity;
 
             order.Items.Add(new OrderItem
             {
@@ -63,8 +62,39 @@ public class OrderService
         }
 
         order.TotalAmount = order.Items.Sum(i => i.Quantity * i.UnitPrice);
-        _context.Orders.Add(order);
-        await _context.SaveChangesAsync();
+
+        // Deduct stock via inventory-service, then persist order.
+        // Track successful deductions so we can compensate on failure.
+        var deducted = new List<(int ProductId, int Quantity)>();
+        try
+        {
+            foreach (var (productId, quantity) in items)
+            {
+                await _inventoryClient.DeductStockAsync(productId, quantity);
+                deducted.Add((productId, quantity));
+            }
+
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+        }
+        catch (Exception ex) when (deducted.Count > 0)
+        {
+            // Compensate: restock any items that were already deducted
+            _logger.LogError(ex, "Order creation failed after deducting {Count} items, compensating", deducted.Count);
+            foreach (var (productId, quantity) in deducted)
+            {
+                try
+                {
+                    await _inventoryClient.RestockAsync(productId, quantity);
+                }
+                catch (Exception restockEx)
+                {
+                    _logger.LogError(restockEx, "Compensation restock failed for product {ProductId}, qty {Qty}", productId, quantity);
+                }
+            }
+            throw;
+        }
+
         return order;
     }
 
