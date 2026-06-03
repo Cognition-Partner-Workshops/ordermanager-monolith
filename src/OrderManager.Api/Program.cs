@@ -10,7 +10,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CustomerService>();
-builder.Services.AddScoped<InventoryService>();
+
+builder.Services.AddHttpClient<InventoryHttpClient>(client =>
+{
+    var baseUrl = builder.Configuration["InventoryServiceUrl"] ?? "http://localhost:5001";
+    client.BaseAddress = new Uri(baseUrl);
+});
 
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
