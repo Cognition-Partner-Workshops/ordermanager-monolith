@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using OrderManager.Api.Data;
 using OrderManager.Api.Services;
+using OrderManager.Api.Services.Clients;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,14 @@ builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CustomerService>();
 builder.Services.AddScoped<InventoryService>();
+
+// Register HTTP client for the inventory microservice
+builder.Services.AddHttpClient<IInventoryServiceClient, HttpInventoryServiceClient>(client =>
+{
+    var baseUrl = builder.Configuration["InventoryServiceUrl"] ?? "http://localhost:5100";
+    client.BaseAddress = new Uri(baseUrl);
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
 
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
