@@ -11,8 +11,6 @@ public class AppDbContext : DbContext
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
-    public DbSet<InventoryItem> InventoryItems => Set<InventoryItem>();
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Customer>(entity =>
@@ -45,12 +43,6 @@ public class AppDbContext : DbContext
             entity.HasOne(e => e.Order).WithMany(o => o.Items).HasForeignKey(e => e.OrderId);
             entity.HasOne(e => e.Product).WithMany(p => p.OrderItems).HasForeignKey(e => e.ProductId);
             entity.Property(e => e.UnitPrice).HasColumnType("decimal(18,2)");
-        });
-
-        modelBuilder.Entity<InventoryItem>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.HasOne(e => e.Product).WithOne(p => p.Inventory).HasForeignKey<InventoryItem>(e => e.ProductId);
         });
     }
 }
