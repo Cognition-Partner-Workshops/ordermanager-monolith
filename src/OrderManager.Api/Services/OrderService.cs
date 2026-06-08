@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OrderManager.Api.Clients;
 using OrderManager.Api.Data;
 using OrderManager.Api.Models;
 
@@ -7,10 +8,12 @@ namespace OrderManager.Api.Services;
 public class OrderService
 {
     private readonly AppDbContext _context;
+    private readonly InventoryHttpClient _inventoryClient;
 
-    public OrderService(AppDbContext context)
+    public OrderService(AppDbContext context, InventoryHttpClient inventoryClient)
     {
         _context = context;
+        _inventoryClient = inventoryClient;
     }
 
     public async Task<List<Order>> GetAllOrdersAsync()
@@ -46,13 +49,13 @@ public class OrderService
             var product = await _context.Products.FindAsync(productId)
                 ?? throw new ArgumentException($"Product {productId} not found");
 
-            var inventory = await _context.InventoryItems.FirstOrDefaultAsync(i => i.ProductId == productId)
-                ?? throw new InvalidOperationException($"No inventory record for product {productId}");
+            var stockLevel = await _inventoryClient.GetStockLevelAsync(productId);
+            if (stockLevel < quantity)
+                throw new InvalidOperationException($"Insufficient stock for {product.Name}. Available: {stockLevel}");
 
-            if (inventory.QuantityOnHand < quantity)
-                throw new InvalidOperationException($"Insufficient stock for {product.Name}. Available: {inventory.QuantityOnHand}");
-
-            inventory.QuantityOnHand -= quantity;
+            var deducted = await _inventoryClient.DeductStockAsync(productId, quantity);
+            if (!deducted)
+                throw new InvalidOperationException($"Failed to deduct stock for {product.Name}");
 
             order.Items.Add(new OrderItem
             {
