@@ -9,6 +9,6 @@ public class Product
     public decimal Price { get; set; }
     public string Sku { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public InventoryItem? Inventory { get; set; }
+    // Inventory navigation property removed — now managed by the inventory microservice
     public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }
