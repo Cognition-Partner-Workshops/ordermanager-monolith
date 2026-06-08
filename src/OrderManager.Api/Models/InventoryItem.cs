@@ -1,12 +1,15 @@
 namespace OrderManager.Api.Models;
 
+/// <summary>
+/// DTO for deserializing inventory data from the inventory-service microservice.
+/// No longer a local EF Core entity — inventory is managed by the inventory-service.
+/// </summary>
 public class InventoryItem
 {
     public int Id { get; set; }
     public int ProductId { get; set; }
-    public Product Product { get; set; } = null!;
     public int QuantityOnHand { get; set; }
-    public int ReorderLevel { get; set; } = 10;
+    public int ReorderLevel { get; set; }
     public string WarehouseLocation { get; set; } = string.Empty;
-    public DateTime LastRestocked { get; set; } = DateTime.UtcNow;
+    public DateTime LastRestocked { get; set; }
 }
