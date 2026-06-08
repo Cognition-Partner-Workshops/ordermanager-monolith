@@ -7,32 +7,66 @@ namespace OrderManager.Api.Controllers;
 [Route("api/[controller]")]
 public class InventoryController : ControllerBase
 {
-    private readonly InventoryService _inventoryService;
+    private readonly InventoryHttpClient _inventoryClient;
 
-    public InventoryController(InventoryService inventoryService)
+    public InventoryController(InventoryHttpClient inventoryClient)
     {
-        _inventoryService = inventoryService;
+        _inventoryClient = inventoryClient;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll() => Ok(await _inventoryService.GetAllInventoryAsync());
+    public async Task<IActionResult> GetAll()
+    {
+        try
+        {
+            return Ok(await _inventoryClient.GetAllInventoryAsync());
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(502, new { error = "Inventory service unavailable" });
+        }
+    }
 
     [HttpGet("product/{productId}")]
     public async Task<IActionResult> GetByProduct(int productId)
     {
-        var item = await _inventoryService.GetInventoryByProductIdAsync(productId);
-        return item is null ? NotFound() : Ok(item);
+        try
+        {
+            var item = await _inventoryClient.GetInventoryByProductIdAsync(productId);
+            return item is null ? NotFound() : Ok(item);
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(502, new { error = "Inventory service unavailable" });
+        }
     }
 
     [HttpPost("product/{productId}/restock")]
     public async Task<IActionResult> Restock(int productId, [FromBody] RestockRequest request)
     {
-        var item = await _inventoryService.RestockAsync(productId, request.Quantity);
-        return Ok(item);
+        try
+        {
+            var item = await _inventoryClient.RestockAsync(productId, request.Quantity);
+            return Ok(item);
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(502, new { error = "Inventory service unavailable" });
+        }
     }
 
     [HttpGet("low-stock")]
-    public async Task<IActionResult> GetLowStock() => Ok(await _inventoryService.GetLowStockItemsAsync());
+    public async Task<IActionResult> GetLowStock()
+    {
+        try
+        {
+            return Ok(await _inventoryClient.GetLowStockItemsAsync());
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(502, new { error = "Inventory service unavailable" });
+        }
+    }
 }
 
 public record RestockRequest(int Quantity);
