@@ -27,9 +27,20 @@ public class OrdersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateOrderRequest request)
     {
-        var items = request.Items.Select(i => (i.ProductId, i.Quantity)).ToList();
-        var order = await _orderService.CreateOrderAsync(request.CustomerId, items);
-        return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
+        try
+        {
+            var items = request.Items.Select(i => (i.ProductId, i.Quantity)).ToList();
+            var order = await _orderService.CreateOrderAsync(request.CustomerId, items);
+            return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
+        }
+        catch (ArgumentException ex)
+        {
+            return NotFound(new { error = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { error = ex.Message });
+        }
     }
 
     [HttpPatch("{id}/status")]
