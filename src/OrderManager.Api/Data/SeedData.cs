@@ -29,14 +29,7 @@ public static class SeedData
         context.Products.AddRange(products);
         context.SaveChanges();
 
-        var inventoryItems = products.Select((p, i) => new InventoryItem
-        {
-            ProductId = p.Id,
-            QuantityOnHand = (i + 1) * 50,
-            ReorderLevel = 10,
-            WarehouseLocation = $"A-{i + 1:D2}"
-        }).ToArray();
-        context.InventoryItems.AddRange(inventoryItems);
+        // Inventory seeding removed — now managed by inventory-service microservice
         context.SaveChanges();
     }
 }
