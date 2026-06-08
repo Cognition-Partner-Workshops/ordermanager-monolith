@@ -1,11 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using OrderManager.Api.Data;
+using OrderManager.Api.HttpClients;
 using OrderManager.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=ordermanager.db"));
+
+var inventoryServiceUrl = builder.Configuration["InventoryServiceUrl"] ?? "http://localhost:5001";
+builder.Services.AddHttpClient<InventoryApiClient>(client =>
+{
+    client.BaseAddress = new Uri(inventoryServiceUrl);
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
 
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ProductService>();
@@ -20,6 +28,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -33,5 +43,6 @@ app.UseSwaggerUI();
 app.UseCors();
 app.UseStaticFiles();
 app.MapControllers();
+app.MapHealthChecks("/health");
 app.MapFallbackToFile("index.html");
 app.Run();
