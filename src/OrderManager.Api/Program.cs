@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OrderManager.Api.Data;
+using OrderManager.Api.HttpClients;
 using OrderManager.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CustomerService>();
+
+builder.Services.AddHttpClient<InventoryHttpClient>(client =>
+{
+    var baseUrl = builder.Configuration["InventoryService:BaseUrl"] ?? "http://localhost:5001";
+    client.BaseAddress = new Uri(baseUrl);
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
 builder.Services.AddScoped<InventoryService>();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
