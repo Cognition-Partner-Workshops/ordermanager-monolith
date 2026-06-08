@@ -29,14 +29,7 @@ public static class SeedData
         context.Products.AddRange(products);
         context.SaveChanges();
 
-        var inventoryItems = products.Select((p, i) => new InventoryItem
-        {
-            ProductId = p.Id,
-            QuantityOnHand = (i + 1) * 50,
-            ReorderLevel = 10,
-            WarehouseLocation = $"A-{i + 1:D2}"
-        }).ToArray();
-        context.InventoryItems.AddRange(inventoryItems);
-        context.SaveChanges();
+        // Inventory data is now managed by the inventory-service microservice.
+        // Seed data for inventory has been removed from the monolith.
     }
 }
