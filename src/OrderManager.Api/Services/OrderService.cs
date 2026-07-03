@@ -9,18 +9,21 @@ public class OrderService
 {
     private readonly AppDbContext _context;
     private readonly IInventoryClient _inventoryClient;
+    private readonly ICustomerClient _customerClient;
+    private readonly IProductClient _productClient;
 
-    public OrderService(AppDbContext context, IInventoryClient inventoryClient)
+    public OrderService(AppDbContext context, IInventoryClient inventoryClient, ICustomerClient customerClient, IProductClient productClient)
     {
         _context = context;
         _inventoryClient = inventoryClient;
+        _customerClient = customerClient;
+        _productClient = productClient;
     }
 
     public async Task<List<Order>> GetAllOrdersAsync()
     {
         return await _context.Orders
-            .Include(o => o.Customer)
-            .Include(o => o.Items).ThenInclude(i => i.Product)
+            .Include(o => o.Items)
             .OrderByDescending(o => o.OrderDate)
             .ToListAsync();
     }
@@ -28,14 +31,13 @@ public class OrderService
     public async Task<Order?> GetOrderByIdAsync(int id)
     {
         return await _context.Orders
-            .Include(o => o.Customer)
-            .Include(o => o.Items).ThenInclude(i => i.Product)
+            .Include(o => o.Items)
             .FirstOrDefaultAsync(o => o.Id == id);
     }
 
     public async Task<Order> CreateOrderAsync(int customerId, List<(int ProductId, int Quantity)> items)
     {
-        var customer = await _context.Customers.FindAsync(customerId)
+        var customer = await _customerClient.GetCustomerByIdAsync(customerId)
             ?? throw new ArgumentException($"Customer {customerId} not found");
 
         var order = new Order
@@ -44,10 +46,13 @@ public class OrderService
             ShippingAddress = $"{customer.Address}, {customer.City}, {customer.State} {customer.ZipCode}"
         };
 
+        var products = (await _productClient.GetProductsByIdsAsync(items.Select(i => i.ProductId)))
+            .ToDictionary(p => p.Id);
+
         foreach (var (productId, quantity) in items)
         {
-            var product = await _context.Products.FindAsync(productId)
-                ?? throw new ArgumentException($"Product {productId} not found");
+            if (!products.TryGetValue(productId, out var product))
+                throw new ArgumentException($"Product {productId} not found");
 
             var inventory = await _inventoryClient.GetInventoryByProductIdAsync(productId)
                 ?? throw new InvalidOperationException($"No inventory record for product {productId}");

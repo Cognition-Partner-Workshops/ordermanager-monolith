@@ -1,6 +1,13 @@
-namespace OrderManager.Api.Models;
+namespace OrderManager.Api.Clients;
 
-public class Customer
+public interface ICustomerClient
+{
+    Task<List<CustomerDto>> GetAllCustomersAsync();
+    Task<CustomerDto?> GetCustomerByIdAsync(int id);
+    Task<CustomerDto> CreateCustomerAsync(CustomerDto customer);
+}
+
+public class CustomerDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -10,6 +17,5 @@ public class Customer
     public string City { get; set; } = string.Empty;
     public string State { get; set; } = string.Empty;
     public string ZipCode { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public ICollection<Order> Orders { get; set; } = new List<Order>();
+    public DateTime CreatedAt { get; set; }
 }
