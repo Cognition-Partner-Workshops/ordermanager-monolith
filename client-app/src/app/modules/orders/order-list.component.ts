@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
       <thead><tr><th>ID</th><th>Customer</th><th>Date</th><th>Status</th><th>Total</th></tr></thead>
       <tbody>
         <tr *ngFor="let o of orders">
-          <td>{{o.id}}</td><td>{{o.customer?.name}}</td><td>{{o.orderDate | date}}</td><td>{{o.status}}</td><td>{{o.totalAmount | currency}}</td>
+          <td>{{o.id}}</td><td>{{o.customerId}}</td><td>{{o.orderDate | date}}</td><td>{{o.status}}</td><td>{{o.totalAmount | currency}}</td>
         </tr>
       </tbody>
     </table>

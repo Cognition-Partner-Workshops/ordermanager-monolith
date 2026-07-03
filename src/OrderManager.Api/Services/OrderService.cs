@@ -9,17 +9,18 @@ public class OrderService
 {
     private readonly AppDbContext _context;
     private readonly IInventoryClient _inventoryClient;
+    private readonly ICustomerClient _customerClient;
 
-    public OrderService(AppDbContext context, IInventoryClient inventoryClient)
+    public OrderService(AppDbContext context, IInventoryClient inventoryClient, ICustomerClient customerClient)
     {
         _context = context;
         _inventoryClient = inventoryClient;
+        _customerClient = customerClient;
     }
 
     public async Task<List<Order>> GetAllOrdersAsync()
     {
         return await _context.Orders
-            .Include(o => o.Customer)
             .Include(o => o.Items).ThenInclude(i => i.Product)
             .OrderByDescending(o => o.OrderDate)
             .ToListAsync();
@@ -28,14 +29,13 @@ public class OrderService
     public async Task<Order?> GetOrderByIdAsync(int id)
     {
         return await _context.Orders
-            .Include(o => o.Customer)
             .Include(o => o.Items).ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(o => o.Id == id);
     }
 
     public async Task<Order> CreateOrderAsync(int customerId, List<(int ProductId, int Quantity)> items)
     {
-        var customer = await _context.Customers.FindAsync(customerId)
+        var customer = await _customerClient.GetCustomerByIdAsync(customerId)
             ?? throw new ArgumentException($"Customer {customerId} not found");
 
         var order = new Order

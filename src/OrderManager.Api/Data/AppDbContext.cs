@@ -7,21 +7,12 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<Customer> Customers => Set<Customer>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Customer>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Email).IsRequired().HasMaxLength(200);
-            entity.HasIndex(e => e.Email).IsUnique();
-        });
-
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -34,7 +25,6 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Order>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.HasOne(e => e.Customer).WithMany(c => c.Orders).HasForeignKey(e => e.CustomerId);
             entity.Property(e => e.TotalAmount).HasColumnType("decimal(18,2)");
         });
 
