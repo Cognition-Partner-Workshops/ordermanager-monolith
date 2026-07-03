@@ -13,6 +13,7 @@
           "options": {
             "outputPath": "../src/OrderManager.Api/wwwroot",
             "index": "src/index.html",
+            "polyfills": ["zone.js"],
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json"
           }
