@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using OrderManager.Api.Models;
-using OrderManager.Api.Services;
+using OrderManager.Api.Clients;
 
 namespace OrderManager.Api.Controllers;
 
@@ -8,27 +7,38 @@ namespace OrderManager.Api.Controllers;
 [Route("api/[controller]")]
 public class CustomersController : ControllerBase
 {
-    private readonly CustomerService _customerService;
+    private readonly ICustomerClient _customerClient;
 
-    public CustomersController(CustomerService customerService)
+    public CustomersController(ICustomerClient customerClient)
     {
-        _customerService = customerService;
+        _customerClient = customerClient;
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll() => Ok(await _customerService.GetAllCustomersAsync());
+    public async Task<IActionResult> GetAll() => Ok(await _customerClient.GetAllCustomersAsync());
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var customer = await _customerService.GetCustomerByIdAsync(id);
+        var customer = await _customerClient.GetCustomerByIdAsync(id);
         return customer is null ? NotFound() : Ok(customer);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Customer customer)
+    public async Task<IActionResult> Create([FromBody] CustomerDto customer)
     {
-        var created = await _customerService.CreateCustomerAsync(customer);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        try
+        {
+            var created = await _customerClient.CreateCustomerAsync(customer);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { error = ex.Message });
+        }
     }
 }

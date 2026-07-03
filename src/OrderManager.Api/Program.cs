@@ -10,10 +10,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ProductService>();
-builder.Services.AddScoped<CustomerService>();
 builder.Services.AddHttpClient<IInventoryClient, InventoryHttpClient>(client =>
 {
     var baseUrl = builder.Configuration["InventoryService:BaseUrl"] ?? "http://localhost:5200";
+    client.BaseAddress = new Uri(baseUrl.EndsWith('/') ? baseUrl : baseUrl + "/");
+});
+builder.Services.AddHttpClient<ICustomerClient, CustomerHttpClient>(client =>
+{
+    var baseUrl = builder.Configuration["CustomerService:BaseUrl"] ?? "http://localhost:5300";
     client.BaseAddress = new Uri(baseUrl.EndsWith('/') ? baseUrl : baseUrl + "/");
 });
 

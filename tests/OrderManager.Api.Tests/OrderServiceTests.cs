@@ -44,6 +44,29 @@ public class FakeInventoryClient : IInventoryClient
         Task.FromResult(_items.Values.Where(i => i.QuantityOnHand <= i.ReorderLevel).ToList());
 }
 
+public class FakeCustomerClient : ICustomerClient
+{
+    private readonly Dictionary<int, CustomerDto> _customers = new();
+
+    public FakeCustomerClient(IEnumerable<CustomerDto> customers)
+    {
+        foreach (var customer in customers) _customers[customer.Id] = customer;
+    }
+
+    public Task<List<CustomerDto>> GetAllCustomersAsync() =>
+        Task.FromResult(_customers.Values.ToList());
+
+    public Task<CustomerDto?> GetCustomerByIdAsync(int id) =>
+        Task.FromResult(_customers.TryGetValue(id, out var customer) ? customer : null);
+
+    public Task<CustomerDto> CreateCustomerAsync(CustomerDto customer)
+    {
+        customer.Id = _customers.Count == 0 ? 1 : _customers.Keys.Max() + 1;
+        _customers[customer.Id] = customer;
+        return Task.FromResult(customer);
+    }
+}
+
 public class OrderServiceTests
 {
     private AppDbContext CreateContext()
@@ -71,11 +94,20 @@ public class OrderServiceTests
         return new FakeInventoryClient(items);
     }
 
+    private static FakeCustomerClient CreateCustomerClient()
+    {
+        return new FakeCustomerClient(new[]
+        {
+            new CustomerDto { Id = 1, Name = "Acme Corp", Email = "orders@acme.com", Address = "123 Main St", City = "Springfield", State = "IL", ZipCode = "62701" },
+            new CustomerDto { Id = 2, Name = "Globex Inc", Email = "purchasing@globex.com", Address = "456 Oak Ave", City = "Shelbyville", State = "IL", ZipCode = "62565" },
+        });
+    }
+
     [Fact]
     public async Task GetAllOrders_ReturnsEmptyList_WhenNoOrders()
     {
         using var context = CreateContext();
-        var service = new OrderService(context, CreateInventoryClient(context));
+        var service = new OrderService(context, CreateInventoryClient(context), CreateCustomerClient());
         var orders = await service.GetAllOrdersAsync();
         Assert.Empty(orders);
     }
@@ -85,9 +117,10 @@ public class OrderServiceTests
     {
         using var context = CreateContext();
         var inventoryClient = CreateInventoryClient(context);
-        var service = new OrderService(context, inventoryClient);
+        var customerClient = CreateCustomerClient();
+        var service = new OrderService(context, inventoryClient, customerClient);
         var product = await context.Products.FirstAsync();
-        var customer = await context.Customers.FirstAsync();
+        var customer = (await customerClient.GetAllCustomersAsync()).First();
         var inventoryBefore = await inventoryClient.GetInventoryByProductIdAsync(product.Id);
         var qtyBefore = inventoryBefore!.QuantityOnHand;
 
@@ -101,9 +134,10 @@ public class OrderServiceTests
     public async Task CreateOrder_ThrowsOnInsufficientStock()
     {
         using var context = CreateContext();
-        var service = new OrderService(context, CreateInventoryClient(context));
+        var customerClient = CreateCustomerClient();
+        var service = new OrderService(context, CreateInventoryClient(context), customerClient);
         var product = await context.Products.FirstAsync();
-        var customer = await context.Customers.FirstAsync();
+        var customer = (await customerClient.GetAllCustomersAsync()).First();
 
         await Assert.ThrowsAsync<InvalidOperationException>(
             () => service.CreateOrderAsync(customer.Id, new List<(int, int)> { (product.Id, 99999) }));
