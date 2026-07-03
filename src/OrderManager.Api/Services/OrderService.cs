@@ -55,8 +55,6 @@ public class OrderService
             if (inventory.QuantityOnHand < quantity)
                 throw new InvalidOperationException($"Insufficient stock for {product.Name}. Available: {inventory.QuantityOnHand}");
 
-            await _inventoryClient.DeductAsync(productId, quantity);
-
             order.Items.Add(new OrderItem
             {
                 ProductId = productId,
@@ -65,10 +63,35 @@ public class OrderService
             });
         }
 
-        order.TotalAmount = order.Items.Sum(i => i.Quantity * i.UnitPrice);
-        _context.Orders.Add(order);
-        await _context.SaveChangesAsync();
-        return order;
+        var deducted = new List<(int ProductId, int Quantity)>();
+        try
+        {
+            foreach (var item in order.Items)
+            {
+                await _inventoryClient.DeductAsync(item.ProductId, item.Quantity);
+                deducted.Add((item.ProductId, item.Quantity));
+            }
+
+            order.TotalAmount = order.Items.Sum(i => i.Quantity * i.UnitPrice);
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
+        catch
+        {
+            foreach (var (productId, quantity) in deducted)
+            {
+                try
+                {
+                    await _inventoryClient.RestockAsync(productId, quantity);
+                }
+                catch
+                {
+                    // Compensation is best-effort; surface the original failure.
+                }
+            }
+            throw;
+        }
     }
 
     public async Task<Order> UpdateOrderStatusAsync(int orderId, string status)
