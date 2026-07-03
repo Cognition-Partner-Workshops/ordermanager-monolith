@@ -8,7 +8,7 @@ public static class SeedData
     {
         context.Database.EnsureCreated();
 
-        if (context.Products.Any()) return;
+        if (context.Customers.Any()) return;
 
         var customers = new[]
         {
@@ -17,16 +17,6 @@ public static class SeedData
             new Customer { Name = "Initech LLC", Email = "supplies@initech.com", Phone = "555-0300", Address = "789 Pine Rd", City = "Capital City", State = "IL", ZipCode = "62702" },
         };
         context.Customers.AddRange(customers);
-
-        var products = new[]
-        {
-            new Product { Name = "Widget A", Description = "Standard widget", Category = "Widgets", Price = 9.99m, Sku = "WGT-001" },
-            new Product { Name = "Widget B", Description = "Premium widget", Category = "Widgets", Price = 19.99m, Sku = "WGT-002" },
-            new Product { Name = "Gadget X", Description = "Basic gadget", Category = "Gadgets", Price = 29.99m, Sku = "GDG-001" },
-            new Product { Name = "Gadget Y", Description = "Advanced gadget", Category = "Gadgets", Price = 49.99m, Sku = "GDG-002" },
-            new Product { Name = "Thingamajig", Description = "Multi-purpose thingamajig", Category = "Misc", Price = 14.99m, Sku = "THG-001" },
-        };
-        context.Products.AddRange(products);
         context.SaveChanges();
     }
 }
