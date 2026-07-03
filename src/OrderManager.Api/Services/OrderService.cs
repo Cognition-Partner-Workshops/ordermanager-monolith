@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OrderManager.Api.Clients;
 using OrderManager.Api.Data;
 using OrderManager.Api.Models;
 
@@ -7,10 +8,12 @@ namespace OrderManager.Api.Services;
 public class OrderService
 {
     private readonly AppDbContext _context;
+    private readonly IInventoryClient _inventoryClient;
 
-    public OrderService(AppDbContext context)
+    public OrderService(AppDbContext context, IInventoryClient inventoryClient)
     {
         _context = context;
+        _inventoryClient = inventoryClient;
     }
 
     public async Task<List<Order>> GetAllOrdersAsync()
@@ -46,13 +49,11 @@ public class OrderService
             var product = await _context.Products.FindAsync(productId)
                 ?? throw new ArgumentException($"Product {productId} not found");
 
-            var inventory = await _context.InventoryItems.FirstOrDefaultAsync(i => i.ProductId == productId)
+            var inventory = await _inventoryClient.GetInventoryByProductIdAsync(productId)
                 ?? throw new InvalidOperationException($"No inventory record for product {productId}");
 
             if (inventory.QuantityOnHand < quantity)
                 throw new InvalidOperationException($"Insufficient stock for {product.Name}. Available: {inventory.QuantityOnHand}");
-
-            inventory.QuantityOnHand -= quantity;
 
             order.Items.Add(new OrderItem
             {
@@ -62,10 +63,35 @@ public class OrderService
             });
         }
 
-        order.TotalAmount = order.Items.Sum(i => i.Quantity * i.UnitPrice);
-        _context.Orders.Add(order);
-        await _context.SaveChangesAsync();
-        return order;
+        var deducted = new List<(int ProductId, int Quantity)>();
+        try
+        {
+            foreach (var item in order.Items)
+            {
+                await _inventoryClient.DeductAsync(item.ProductId, item.Quantity);
+                deducted.Add((item.ProductId, item.Quantity));
+            }
+
+            order.TotalAmount = order.Items.Sum(i => i.Quantity * i.UnitPrice);
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+            return order;
+        }
+        catch
+        {
+            foreach (var (productId, quantity) in deducted)
+            {
+                try
+                {
+                    await _inventoryClient.RestockAsync(productId, quantity);
+                }
+                catch
+                {
+                    // Compensation is best-effort; surface the original failure.
+                }
+            }
+            throw;
+        }
     }
 
     public async Task<Order> UpdateOrderStatusAsync(int orderId, string status)
