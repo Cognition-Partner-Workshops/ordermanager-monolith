@@ -8,4 +8,3 @@ dist/
 .angular/
 *.db
 appsettings.Development.json
-package-lock.json

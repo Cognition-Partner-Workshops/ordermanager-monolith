@@ -2,7 +2,7 @@
 FROM node:20-alpine AS client-build
 WORKDIR /app
 COPY client-app/package*.json client-app/
-RUN cd client-app && npm install
+RUN cd client-app && npm ci
 COPY client-app/ client-app/
 # angular.json outputs to ../src/OrderManager.Api/wwwroot (browser/ subfolder)
 RUN cd client-app && npm run build

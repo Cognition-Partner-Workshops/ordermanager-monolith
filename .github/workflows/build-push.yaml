@@ -31,7 +31,11 @@ jobs:
       - name: Run .NET tests
         run: dotnet test --verbosity normal
 
+      - name: Build Docker image
+        run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+
       - name: Configure AWS credentials
+        if: github.event_name == 'push'
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::599083837640:role/github-actions-ecr-push
@@ -39,10 +43,8 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
+        if: github.event_name == 'push'
         uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build Docker image
-        run: docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
 
       - name: Push Docker image
         if: github.event_name == 'push'
