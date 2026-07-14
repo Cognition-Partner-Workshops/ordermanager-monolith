@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,9 @@ public class Product {
     @Column(nullable = false, length = 50, unique = true)
     private String sku;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     private List<OrderItem> orderItems = new ArrayList<>();
@@ -59,6 +63,9 @@ public class Product {
 
     public String getSku() { return sku; }
     public void setSku(String sku) { this.sku = sku; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     public List<OrderItem> getOrderItems() { return orderItems; }
     public void setOrderItems(List<OrderItem> orderItems) { this.orderItems = orderItems; }

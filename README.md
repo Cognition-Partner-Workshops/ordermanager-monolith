@@ -56,6 +56,33 @@ cd server-java
 
 The Java backend will be available at `http://localhost:5000`.
 
+### Migration facade (single origin) & parity gate
+
+The migration follows the **strangler-fig** pattern: a reverse-proxy facade
+(`facade/`) is the single origin the Angular SPA talks to, and each `/api` route
+group is cut over from .NET to Java independently by flipping one proxy rule.
+See [`facade/README.md`](facade/README.md).
+
+```bash
+# terminal 1: legacy .NET on :5001
+ASPNETCORE_URLS=http://localhost:5001 dotnet run --project src/OrderManager.Api/OrderManager.Api.csproj
+# terminal 2: Java on :5000
+cd server-java && ./mvnw spring-boot:run
+# terminal 3: facade on :8080 (the SPA origin)
+./facade/start.sh
+```
+
+A contract/parity harness (`parity/`) is the acceptance gate for every cutover —
+it verifies the Java responses match the .NET responses (status + JSON shape).
+See [`parity/README.md`](parity/README.md) and the end-to-end runner:
+
+```bash
+./parity/run_parity.sh
+```
+
+The per-module cutover process is documented in
+[`MIGRATION_WORKFLOW.md`](MIGRATION_WORKFLOW.md).
+
 ## Decomposition Targets
 
 This monolith is designed to be decomposed into microservices that conform to the

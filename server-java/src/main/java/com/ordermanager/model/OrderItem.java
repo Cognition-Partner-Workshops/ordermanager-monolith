@@ -36,11 +36,16 @@ public class OrderItem {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public Long getOrderId() { return orderId; }
+    public Long getOrderId() { return order != null ? order.getId() : orderId; }
     public void setOrderId(Long orderId) { this.orderId = orderId; }
 
-    public Long getProductId() { return productId; }
+    public Long getProductId() { return product != null ? product.getId() : productId; }
     public void setProductId(Long productId) { this.productId = productId; }
+
+    // Computed value mirroring .NET's OrderItem.LineTotal (Quantity * UnitPrice).
+    public BigDecimal getLineTotal() {
+        return unitPrice == null ? null : unitPrice.multiply(BigDecimal.valueOf(quantity));
+    }
 
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }

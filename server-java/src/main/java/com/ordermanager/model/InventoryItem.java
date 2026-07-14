@@ -19,7 +19,7 @@ public class InventoryItem {
     private int quantityOnHand;
     private int reorderLevel;
     private String warehouseLocation;
-    private LocalDateTime lastRestocked;
+    private LocalDateTime lastRestocked = LocalDateTime.now();
 
     @OneToOne
     @JoinColumn(name = "product_id")

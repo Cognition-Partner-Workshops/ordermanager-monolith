@@ -1,0 +1,3 @@
+# Regenerated on every run; the .NET capture in fixtures/dotnet/ is the golden baseline.
+fixtures/java/
+last-report.json

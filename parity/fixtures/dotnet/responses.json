@@ -1,0 +1,699 @@
+{
+  "customers_create": {
+    "json": {
+      "address": "1 Raccoon Rd",
+      "city": "Raccoon City",
+      "createdAt": "2026-07-14T13:40:01.6999059Z",
+      "email": "buyer@umbrella.com",
+      "id": 4,
+      "name": "Umbrella Co",
+      "orders": [],
+      "phone": "555-0400",
+      "state": "IL",
+      "zipCode": "60000"
+    },
+    "status": 201
+  },
+  "customers_get_1": {
+    "json": {
+      "address": "123 Main St",
+      "city": "Springfield",
+      "createdAt": "2026-07-14T13:39:48.1783592",
+      "email": "orders@acme.com",
+      "id": 1,
+      "name": "Acme Corp",
+      "orders": [],
+      "phone": "555-0100",
+      "state": "IL",
+      "zipCode": "62701"
+    },
+    "status": 200
+  },
+  "customers_get_missing": {
+    "json": {
+      "status": 404,
+      "title": "Not Found",
+      "traceId": "00-9734b4fe69dd4211a90c60318248257d-255b485bd7c5b312-00",
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5"
+    },
+    "status": 404
+  },
+  "customers_list": {
+    "json": [
+      {
+        "address": "123 Main St",
+        "city": "Springfield",
+        "createdAt": "2026-07-14T13:39:48.1783592",
+        "email": "orders@acme.com",
+        "id": 1,
+        "name": "Acme Corp",
+        "orders": [],
+        "phone": "555-0100",
+        "state": "IL",
+        "zipCode": "62701"
+      },
+      {
+        "address": "456 Oak Ave",
+        "city": "Shelbyville",
+        "createdAt": "2026-07-14T13:39:48.178435",
+        "email": "purchasing@globex.com",
+        "id": 2,
+        "name": "Globex Inc",
+        "orders": [],
+        "phone": "555-0200",
+        "state": "IL",
+        "zipCode": "62565"
+      },
+      {
+        "address": "789 Pine Rd",
+        "city": "Capital City",
+        "createdAt": "2026-07-14T13:39:48.1784353",
+        "email": "supplies@initech.com",
+        "id": 3,
+        "name": "Initech LLC",
+        "orders": [],
+        "phone": "555-0300",
+        "state": "IL",
+        "zipCode": "62702"
+      }
+    ],
+    "status": 200
+  },
+  "inventory_after_restock_1": {
+    "json": {
+      "id": 1,
+      "lastRestocked": "2026-07-14T13:40:01.6911898",
+      "product": {
+        "category": "Widgets",
+        "createdAt": "2026-07-14T13:39:48.2244998",
+        "description": "Standard widget",
+        "id": 1,
+        "inventory": null,
+        "name": "Widget A",
+        "orderItems": [],
+        "price": 9.99,
+        "sku": "WGT-001"
+      },
+      "productId": 1,
+      "quantityOnHand": 73,
+      "reorderLevel": 10,
+      "warehouseLocation": "A-01"
+    },
+    "status": 200
+  },
+  "inventory_by_product_1": {
+    "json": {
+      "id": 1,
+      "lastRestocked": "2026-07-14T13:39:48.2814669",
+      "product": {
+        "category": "Widgets",
+        "createdAt": "2026-07-14T13:39:48.2244998",
+        "description": "Standard widget",
+        "id": 1,
+        "inventory": null,
+        "name": "Widget A",
+        "orderItems": [],
+        "price": 9.99,
+        "sku": "WGT-001"
+      },
+      "productId": 1,
+      "quantityOnHand": 50,
+      "reorderLevel": 10,
+      "warehouseLocation": "A-01"
+    },
+    "status": 200
+  },
+  "inventory_list": {
+    "json": [
+      {
+        "id": 1,
+        "lastRestocked": "2026-07-14T13:39:48.2814669",
+        "product": {
+          "category": "Widgets",
+          "createdAt": "2026-07-14T13:39:48.2244998",
+          "description": "Standard widget",
+          "id": 1,
+          "inventory": null,
+          "name": "Widget A",
+          "orderItems": [],
+          "price": 9.99,
+          "sku": "WGT-001"
+        },
+        "productId": 1,
+        "quantityOnHand": 50,
+        "reorderLevel": 10,
+        "warehouseLocation": "A-01"
+      },
+      {
+        "id": 2,
+        "lastRestocked": "2026-07-14T13:39:48.2819014",
+        "product": {
+          "category": "Widgets",
+          "createdAt": "2026-07-14T13:39:48.2245871",
+          "description": "Premium widget",
+          "id": 2,
+          "inventory": null,
+          "name": "Widget B",
+          "orderItems": [],
+          "price": 19.99,
+          "sku": "WGT-002"
+        },
+        "productId": 2,
+        "quantityOnHand": 100,
+        "reorderLevel": 10,
+        "warehouseLocation": "A-02"
+      },
+      {
+        "id": 3,
+        "lastRestocked": "2026-07-14T13:39:48.281913",
+        "product": {
+          "category": "Gadgets",
+          "createdAt": "2026-07-14T13:39:48.2245874",
+          "description": "Basic gadget",
+          "id": 3,
+          "inventory": null,
+          "name": "Gadget X",
+          "orderItems": [],
+          "price": 29.99,
+          "sku": "GDG-001"
+        },
+        "productId": 3,
+        "quantityOnHand": 150,
+        "reorderLevel": 10,
+        "warehouseLocation": "A-03"
+      },
+      {
+        "id": 4,
+        "lastRestocked": "2026-07-14T13:39:48.2819134",
+        "product": {
+          "category": "Gadgets",
+          "createdAt": "2026-07-14T13:39:48.2245876",
+          "description": "Advanced gadget",
+          "id": 4,
+          "inventory": null,
+          "name": "Gadget Y",
+          "orderItems": [],
+          "price": 49.99,
+          "sku": "GDG-002"
+        },
+        "productId": 4,
+        "quantityOnHand": 200,
+        "reorderLevel": 10,
+        "warehouseLocation": "A-04"
+      },
+      {
+        "id": 5,
+        "lastRestocked": "2026-07-14T13:39:48.2819136",
+        "product": {
+          "category": "Misc",
+          "createdAt": "2026-07-14T13:39:48.2245877",
+          "description": "Multi-purpose thingamajig",
+          "id": 5,
+          "inventory": null,
+          "name": "Thingamajig",
+          "orderItems": [],
+          "price": 14.99,
+          "sku": "THG-001"
+        },
+        "productId": 5,
+        "quantityOnHand": 250,
+        "reorderLevel": 10,
+        "warehouseLocation": "A-05"
+      }
+    ],
+    "status": 200
+  },
+  "inventory_low_stock": {
+    "json": [],
+    "status": 200
+  },
+  "inventory_restock_1": {
+    "json": {
+      "id": 1,
+      "lastRestocked": "2026-07-14T13:40:01.6911898Z",
+      "product": null,
+      "productId": 1,
+      "quantityOnHand": 73,
+      "reorderLevel": 10,
+      "warehouseLocation": "A-01"
+    },
+    "status": 200
+  },
+  "orders_create": {
+    "json": {
+      "customer": {
+        "address": "123 Main St",
+        "city": "Springfield",
+        "createdAt": "2026-07-14T13:39:48.1783592",
+        "email": "orders@acme.com",
+        "id": 1,
+        "name": "Acme Corp",
+        "orders": [
+          null
+        ],
+        "phone": "555-0100",
+        "state": "IL",
+        "zipCode": "62701"
+      },
+      "customerId": 1,
+      "id": 1,
+      "items": [
+        {
+          "id": 1,
+          "lineTotal": 19.98,
+          "order": null,
+          "orderId": 1,
+          "product": {
+            "category": "Widgets",
+            "createdAt": "2026-07-14T13:39:48.2244998",
+            "description": "Standard widget",
+            "id": 1,
+            "inventory": {
+              "id": 1,
+              "lastRestocked": "2026-07-14T13:39:48.2814669",
+              "product": null,
+              "productId": 1,
+              "quantityOnHand": 48,
+              "reorderLevel": 10,
+              "warehouseLocation": "A-01"
+            },
+            "name": "Widget A",
+            "orderItems": [
+              null
+            ],
+            "price": 9.99,
+            "sku": "WGT-001"
+          },
+          "productId": 1,
+          "quantity": 2,
+          "unitPrice": 9.99
+        },
+        {
+          "id": 2,
+          "lineTotal": 29.99,
+          "order": null,
+          "orderId": 1,
+          "product": {
+            "category": "Gadgets",
+            "createdAt": "2026-07-14T13:39:48.2245874",
+            "description": "Basic gadget",
+            "id": 3,
+            "inventory": {
+              "id": 3,
+              "lastRestocked": "2026-07-14T13:39:48.281913",
+              "product": null,
+              "productId": 3,
+              "quantityOnHand": 149,
+              "reorderLevel": 10,
+              "warehouseLocation": "A-03"
+            },
+            "name": "Gadget X",
+            "orderItems": [
+              null
+            ],
+            "price": 29.99,
+            "sku": "GDG-001"
+          },
+          "productId": 3,
+          "quantity": 1,
+          "unitPrice": 29.99
+        }
+      ],
+      "orderDate": "2026-07-14T13:40:01.6176737Z",
+      "shippingAddress": "123 Main St, Springfield, IL 62701",
+      "status": "Pending",
+      "totalAmount": 49.97
+    },
+    "status": 201
+  },
+  "orders_get_1": {
+    "json": {
+      "customer": {
+        "address": "123 Main St",
+        "city": "Springfield",
+        "createdAt": "2026-07-14T13:39:48.1783592",
+        "email": "orders@acme.com",
+        "id": 1,
+        "name": "Acme Corp",
+        "orders": [
+          null
+        ],
+        "phone": "555-0100",
+        "state": "IL",
+        "zipCode": "62701"
+      },
+      "customerId": 1,
+      "id": 1,
+      "items": [
+        {
+          "id": 1,
+          "lineTotal": 19.98,
+          "order": null,
+          "orderId": 1,
+          "product": {
+            "category": "Widgets",
+            "createdAt": "2026-07-14T13:39:48.2244998",
+            "description": "Standard widget",
+            "id": 1,
+            "inventory": null,
+            "name": "Widget A",
+            "orderItems": [
+              null
+            ],
+            "price": 9.99,
+            "sku": "WGT-001"
+          },
+          "productId": 1,
+          "quantity": 2,
+          "unitPrice": 9.99
+        },
+        {
+          "id": 2,
+          "lineTotal": 29.99,
+          "order": null,
+          "orderId": 1,
+          "product": {
+            "category": "Gadgets",
+            "createdAt": "2026-07-14T13:39:48.2245874",
+            "description": "Basic gadget",
+            "id": 3,
+            "inventory": null,
+            "name": "Gadget X",
+            "orderItems": [
+              null
+            ],
+            "price": 29.99,
+            "sku": "GDG-001"
+          },
+          "productId": 3,
+          "quantity": 1,
+          "unitPrice": 29.99
+        }
+      ],
+      "orderDate": "2026-07-14T13:40:01.6176737",
+      "shippingAddress": "123 Main St, Springfield, IL 62701",
+      "status": "Pending",
+      "totalAmount": 49.97
+    },
+    "status": 200
+  },
+  "orders_get_missing": {
+    "json": {
+      "status": 404,
+      "title": "Not Found",
+      "traceId": "00-3ff4046b0f90244fad7cde1cfa8de452-52850954654d2191-00",
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5"
+    },
+    "status": 404
+  },
+  "orders_insufficient_stock": {
+    "json": null,
+    "status": 500
+  },
+  "orders_list_after_create": {
+    "json": [
+      {
+        "customer": {
+          "address": "123 Main St",
+          "city": "Springfield",
+          "createdAt": "2026-07-14T13:39:48.1783592",
+          "email": "orders@acme.com",
+          "id": 1,
+          "name": "Acme Corp",
+          "orders": [
+            null
+          ],
+          "phone": "555-0100",
+          "state": "IL",
+          "zipCode": "62701"
+        },
+        "customerId": 1,
+        "id": 1,
+        "items": [
+          {
+            "id": 1,
+            "lineTotal": 19.98,
+            "order": null,
+            "orderId": 1,
+            "product": {
+              "category": "Widgets",
+              "createdAt": "2026-07-14T13:39:48.2244998",
+              "description": "Standard widget",
+              "id": 1,
+              "inventory": null,
+              "name": "Widget A",
+              "orderItems": [
+                null
+              ],
+              "price": 9.99,
+              "sku": "WGT-001"
+            },
+            "productId": 1,
+            "quantity": 2,
+            "unitPrice": 9.99
+          },
+          {
+            "id": 2,
+            "lineTotal": 29.99,
+            "order": null,
+            "orderId": 1,
+            "product": {
+              "category": "Gadgets",
+              "createdAt": "2026-07-14T13:39:48.2245874",
+              "description": "Basic gadget",
+              "id": 3,
+              "inventory": null,
+              "name": "Gadget X",
+              "orderItems": [
+                null
+              ],
+              "price": 29.99,
+              "sku": "GDG-001"
+            },
+            "productId": 3,
+            "quantity": 1,
+            "unitPrice": 29.99
+          }
+        ],
+        "orderDate": "2026-07-14T13:40:01.6176737",
+        "shippingAddress": "123 Main St, Springfield, IL 62701",
+        "status": "Pending",
+        "totalAmount": 49.97
+      }
+    ],
+    "status": 200
+  },
+  "orders_list_empty": {
+    "json": [],
+    "status": 200
+  },
+  "orders_unknown_customer": {
+    "json": null,
+    "status": 500
+  },
+  "orders_update_status": {
+    "json": {
+      "customer": null,
+      "customerId": 1,
+      "id": 1,
+      "items": [],
+      "orderDate": "2026-07-14T13:40:01.6176737",
+      "shippingAddress": "123 Main St, Springfield, IL 62701",
+      "status": "Shipped",
+      "totalAmount": 49.97
+    },
+    "status": 200
+  },
+  "products_by_category": {
+    "json": [
+      {
+        "category": "Widgets",
+        "createdAt": "2026-07-14T13:39:48.2244998",
+        "description": "Standard widget",
+        "id": 1,
+        "inventory": {
+          "id": 1,
+          "lastRestocked": "2026-07-14T13:39:48.2814669",
+          "product": null,
+          "productId": 1,
+          "quantityOnHand": 50,
+          "reorderLevel": 10,
+          "warehouseLocation": "A-01"
+        },
+        "name": "Widget A",
+        "orderItems": [],
+        "price": 9.99,
+        "sku": "WGT-001"
+      },
+      {
+        "category": "Widgets",
+        "createdAt": "2026-07-14T13:39:48.2245871",
+        "description": "Premium widget",
+        "id": 2,
+        "inventory": {
+          "id": 2,
+          "lastRestocked": "2026-07-14T13:39:48.2819014",
+          "product": null,
+          "productId": 2,
+          "quantityOnHand": 100,
+          "reorderLevel": 10,
+          "warehouseLocation": "A-02"
+        },
+        "name": "Widget B",
+        "orderItems": [],
+        "price": 19.99,
+        "sku": "WGT-002"
+      }
+    ],
+    "status": 200
+  },
+  "products_create": {
+    "json": {
+      "category": "Gizmos",
+      "createdAt": "2026-07-14T13:40:01.7066047Z",
+      "description": "Deluxe gizmo",
+      "id": 6,
+      "inventory": null,
+      "name": "Gizmo Z",
+      "orderItems": [],
+      "price": 99.99,
+      "sku": "GZM-001"
+    },
+    "status": 201
+  },
+  "products_get_1": {
+    "json": {
+      "category": "Widgets",
+      "createdAt": "2026-07-14T13:39:48.2244998",
+      "description": "Standard widget",
+      "id": 1,
+      "inventory": {
+        "id": 1,
+        "lastRestocked": "2026-07-14T13:39:48.2814669",
+        "product": null,
+        "productId": 1,
+        "quantityOnHand": 50,
+        "reorderLevel": 10,
+        "warehouseLocation": "A-01"
+      },
+      "name": "Widget A",
+      "orderItems": [],
+      "price": 9.99,
+      "sku": "WGT-001"
+    },
+    "status": 200
+  },
+  "products_get_missing": {
+    "json": {
+      "status": 404,
+      "title": "Not Found",
+      "traceId": "00-1f8dc2f09bebd38059245da1ceaf33c4-e5f35cfed658176f-00",
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5"
+    },
+    "status": 404
+  },
+  "products_list": {
+    "json": [
+      {
+        "category": "Widgets",
+        "createdAt": "2026-07-14T13:39:48.2244998",
+        "description": "Standard widget",
+        "id": 1,
+        "inventory": {
+          "id": 1,
+          "lastRestocked": "2026-07-14T13:39:48.2814669",
+          "product": null,
+          "productId": 1,
+          "quantityOnHand": 50,
+          "reorderLevel": 10,
+          "warehouseLocation": "A-01"
+        },
+        "name": "Widget A",
+        "orderItems": [],
+        "price": 9.99,
+        "sku": "WGT-001"
+      },
+      {
+        "category": "Widgets",
+        "createdAt": "2026-07-14T13:39:48.2245871",
+        "description": "Premium widget",
+        "id": 2,
+        "inventory": {
+          "id": 2,
+          "lastRestocked": "2026-07-14T13:39:48.2819014",
+          "product": null,
+          "productId": 2,
+          "quantityOnHand": 100,
+          "reorderLevel": 10,
+          "warehouseLocation": "A-02"
+        },
+        "name": "Widget B",
+        "orderItems": [],
+        "price": 19.99,
+        "sku": "WGT-002"
+      },
+      {
+        "category": "Gadgets",
+        "createdAt": "2026-07-14T13:39:48.2245874",
+        "description": "Basic gadget",
+        "id": 3,
+        "inventory": {
+          "id": 3,
+          "lastRestocked": "2026-07-14T13:39:48.281913",
+          "product": null,
+          "productId": 3,
+          "quantityOnHand": 150,
+          "reorderLevel": 10,
+          "warehouseLocation": "A-03"
+        },
+        "name": "Gadget X",
+        "orderItems": [],
+        "price": 29.99,
+        "sku": "GDG-001"
+      },
+      {
+        "category": "Gadgets",
+        "createdAt": "2026-07-14T13:39:48.2245876",
+        "description": "Advanced gadget",
+        "id": 4,
+        "inventory": {
+          "id": 4,
+          "lastRestocked": "2026-07-14T13:39:48.2819134",
+          "product": null,
+          "productId": 4,
+          "quantityOnHand": 200,
+          "reorderLevel": 10,
+          "warehouseLocation": "A-04"
+        },
+        "name": "Gadget Y",
+        "orderItems": [],
+        "price": 49.99,
+        "sku": "GDG-002"
+      },
+      {
+        "category": "Misc",
+        "createdAt": "2026-07-14T13:39:48.2245877",
+        "description": "Multi-purpose thingamajig",
+        "id": 5,
+        "inventory": {
+          "id": 5,
+          "lastRestocked": "2026-07-14T13:39:48.2819136",
+          "product": null,
+          "productId": 5,
+          "quantityOnHand": 250,
+          "reorderLevel": 10,
+          "warehouseLocation": "A-05"
+        },
+        "name": "Thingamajig",
+        "orderItems": [],
+        "price": 14.99,
+        "sku": "THG-001"
+      }
+    ],
+    "status": 200
+  },
+  "restock_unknown_product": {
+    "json": null,
+    "status": 500
+  }
+}
