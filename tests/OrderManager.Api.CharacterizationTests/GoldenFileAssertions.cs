@@ -20,7 +20,6 @@ internal static class GoldenFileAssertions
         var normalized = JsonSerializer.Serialize(node, SerializerOptions);
         var goldenPath = Path.Combine(
             AppContext.BaseDirectory,
-            "CharacterizationTests",
             "golden",
             fileName);
 
@@ -28,7 +27,7 @@ internal static class GoldenFileAssertions
         {
             var sourcePath = Path.GetFullPath(Path.Combine(
                 AppContext.BaseDirectory,
-                "../../../CharacterizationTests/golden",
+                "../../../golden",
                 fileName));
             File.WriteAllText(sourcePath, normalized);
             return;
@@ -45,9 +44,13 @@ internal static class GoldenFileAssertions
             case JsonObject jsonObject:
                 foreach (var property in jsonObject.ToList())
                 {
-                    if (property.Key is "createdAt" or "lastRestocked" or "traceId")
+                    if (property.Key is "createdAt" or "lastRestocked")
                     {
                         jsonObject[property.Key] = "<timestamp>";
+                    }
+                    else if (property.Key == "traceId")
+                    {
+                        jsonObject[property.Key] = "<traceid>";
                     }
                     else
                     {
