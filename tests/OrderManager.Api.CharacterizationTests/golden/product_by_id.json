@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "name": "Widget A",
+  "description": "Standard widget",
+  "category": "Widgets",
+  "price": 9.99,
+  "sku": "WGT-001",
+  "createdAt": "<timestamp>",
+  "inventory": {
+    "id": 1,
+    "productId": 1,
+    "product": null,
+    "quantityOnHand": 50,
+    "reorderLevel": 10,
+    "warehouseLocation": "A-01",
+    "lastRestocked": "<timestamp>"
+  },
+  "orderItems": []
+}

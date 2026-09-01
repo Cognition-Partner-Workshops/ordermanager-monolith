@@ -1,0 +1,97 @@
+[
+  {
+    "id": 1,
+    "name": "Widget A",
+    "description": "Standard widget",
+    "category": "Widgets",
+    "price": 9.99,
+    "sku": "WGT-001",
+    "createdAt": "<timestamp>",
+    "inventory": {
+      "id": 1,
+      "productId": 1,
+      "product": null,
+      "quantityOnHand": 50,
+      "reorderLevel": 10,
+      "warehouseLocation": "A-01",
+      "lastRestocked": "<timestamp>"
+    },
+    "orderItems": []
+  },
+  {
+    "id": 2,
+    "name": "Widget B",
+    "description": "Premium widget",
+    "category": "Widgets",
+    "price": 19.99,
+    "sku": "WGT-002",
+    "createdAt": "<timestamp>",
+    "inventory": {
+      "id": 2,
+      "productId": 2,
+      "product": null,
+      "quantityOnHand": 100,
+      "reorderLevel": 10,
+      "warehouseLocation": "A-02",
+      "lastRestocked": "<timestamp>"
+    },
+    "orderItems": []
+  },
+  {
+    "id": 3,
+    "name": "Gadget X",
+    "description": "Basic gadget",
+    "category": "Gadgets",
+    "price": 29.99,
+    "sku": "GDG-001",
+    "createdAt": "<timestamp>",
+    "inventory": {
+      "id": 3,
+      "productId": 3,
+      "product": null,
+      "quantityOnHand": 150,
+      "reorderLevel": 10,
+      "warehouseLocation": "A-03",
+      "lastRestocked": "<timestamp>"
+    },
+    "orderItems": []
+  },
+  {
+    "id": 4,
+    "name": "Gadget Y",
+    "description": "Advanced gadget",
+    "category": "Gadgets",
+    "price": 49.99,
+    "sku": "GDG-002",
+    "createdAt": "<timestamp>",
+    "inventory": {
+      "id": 4,
+      "productId": 4,
+      "product": null,
+      "quantityOnHand": 200,
+      "reorderLevel": 10,
+      "warehouseLocation": "A-04",
+      "lastRestocked": "<timestamp>"
+    },
+    "orderItems": []
+  },
+  {
+    "id": 5,
+    "name": "Thingamajig",
+    "description": "Multi-purpose thingamajig",
+    "category": "Misc",
+    "price": 14.99,
+    "sku": "THG-001",
+    "createdAt": "<timestamp>",
+    "inventory": {
+      "id": 5,
+      "productId": 5,
+      "product": null,
+      "quantityOnHand": 250,
+      "reorderLevel": 10,
+      "warehouseLocation": "A-05",
+      "lastRestocked": "<timestamp>"
+    },
+    "orderItems": []
+  }
+]

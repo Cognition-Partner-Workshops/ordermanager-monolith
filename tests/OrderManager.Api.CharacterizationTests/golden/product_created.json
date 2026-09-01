@@ -1,0 +1,11 @@
+{
+  "id": 6,
+  "name": "Test Product",
+  "description": "Characterization product",
+  "category": "Widgets",
+  "price": 12.34,
+  "sku": "TST-001",
+  "createdAt": "<timestamp>",
+  "inventory": null,
+  "orderItems": []
+}
