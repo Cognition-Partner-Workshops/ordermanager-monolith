@@ -11,10 +11,16 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "../src/OrderManager.Api/wwwroot",
+            "outputPath": {
+              "base": "../src/OrderManager.Api/wwwroot",
+              "browser": ""
+            },
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json"
+            "tsConfig": "tsconfig.app.json",
+            "polyfills": [
+              "zone.js"
+            ]
           }
         }
       }
