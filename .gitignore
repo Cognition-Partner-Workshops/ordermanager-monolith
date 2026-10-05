@@ -9,3 +9,4 @@ dist/
 *.db
 appsettings.Development.json
 package-lock.json
+wwwroot/
