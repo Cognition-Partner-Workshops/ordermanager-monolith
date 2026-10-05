@@ -11,9 +11,12 @@ The application contains four tightly coupled modules:
 | **Orders** | Order creation, status tracking, fulfillment |
 | **Products** | Product catalog, pricing, categories |
 | **Customers** | Customer profiles, addresses, preferences |
-| **Inventory** | Stock levels, warehouse locations, reorder |
+| **Inventory** | *Extracted* — proxied over HTTP to the standalone `inventory-service` |
 
-All modules share a single SQLite database and are deployed as one unit.
+Orders, Products and Customers share a single SQLite database. Inventory now lives in the
+[`inventory-service`](https://github.com/Cognition-Partner-Workshops/ordermanager-microservices/tree/main/inventory-service)
+and is reached through `IInventoryClient` / `InventoryHttpClient` (`InventoryService:BaseUrl` in `appsettings.json`,
+or the `InventoryService__BaseUrl` environment variable). Order creation checks and deducts stock via that API.
 
 ## Tech Stack
 
@@ -37,8 +40,8 @@ dotnet restore src/OrderManager.Api/OrderManager.Api.csproj
 # Install Angular dependencies
 cd client-app && npm install && cd ..
 
-# Run the API (serves Angular app too)
-dotnet run --project src/OrderManager.Api/OrderManager.Api.csproj
+# Start the inventory-service first (defaults to http://localhost:8080), then run the API (serves Angular app too)
+InventoryService__BaseUrl=http://localhost:8080 dotnet run --project src/OrderManager.Api/OrderManager.Api.csproj
 ```
 
 The application will be available at `https://localhost:5001`.

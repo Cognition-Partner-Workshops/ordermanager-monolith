@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace OrderManager.Api.Models;
 
 public class Product
@@ -9,6 +11,7 @@ public class Product
     public decimal Price { get; set; }
     public string Sku { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public InventoryItem? Inventory { get; set; }
+    [NotMapped]
+    public InventoryItemDto? Inventory { get; set; }
     public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }

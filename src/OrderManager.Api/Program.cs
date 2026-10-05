@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OrderManager.Api.Controllers;
 using OrderManager.Api.Data;
 using OrderManager.Api.Services;
 
@@ -10,9 +11,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<CustomerService>();
-builder.Services.AddScoped<InventoryService>();
 
-builder.Services.AddControllers().AddJsonOptions(options =>
+// Inventory has been extracted to the inventory-service; all stock operations go over HTTP.
+builder.Services.AddHttpClient<IInventoryClient, InventoryHttpClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["InventoryService:BaseUrl"] ?? "http://localhost:8080");
+    client.Timeout = TimeSpan.FromSeconds(builder.Configuration.GetValue("InventoryService:TimeoutSeconds", 10));
+});
+
+builder.Services.AddControllers(options => options.Filters.Add<ApiExceptionFilter>()).AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddEndpointsApiExplorer();
